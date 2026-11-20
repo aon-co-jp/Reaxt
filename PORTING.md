@@ -739,3 +739,8 @@ We verified the join not only with fake subgraphs but also with **independent, r
 - **日本語**: `reaxt-actions` に `Wire` の試験を1件追加(無限大は `null`、負数の往復、`Box<Option<i64>>`)。動作の変更なし。未了: 7個以上のタプル、Mac・iPhone の実機確認。
 - **English**: One `Wire` test added in `reaxt-actions` (infinity becomes `null`, negative numbers round-trip, `Box<Option<i64>>`). No behavior change. Open: tuples of 7 or more, and real-device checks on Mac and iPhone.
 - AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.
+
+## 2026-11-20 追記: 型違いの拒否と文字列エスケープの試験(自動の小さな保守) / Wrong-type rejection and string-escape test (small automated maintenance)
+- **日本語**: `reaxt-actions` の `Wire` に、型が違うJSON(`bool`に文字列や数、`String`に数や`null`、`Vec`にオブジェクト、`i64`に真偽値)がエラーになる試験と、引用符・円記号・改行を含む文字列の往復の試験を足しました(`cargo test -p reaxt-actions` 25件成功)。コードの動作は変えていません。未了: 7個以上のタプルは対象外のまま、Mac・iPhone の実機確認。
+- **English**: I added a test to `Wire` in `reaxt-actions` showing that JSON of the wrong type is rejected (a string or number for `bool`, a number or `null` for `String`, an object for `Vec`, a boolean for `i64`), and that a string containing a quote, a backslash and a newline round-trips. `cargo test -p reaxt-actions`: 25 pass. No behavior changed. Still open: tuples of 7 or more stay out of scope, and real-device checks on Mac and iPhone.
+- AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.

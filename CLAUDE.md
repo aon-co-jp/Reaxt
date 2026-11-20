@@ -776,3 +776,8 @@ English: Features that use AI/LLMs follow the file above: short context, caps an
 - **日本語**: `reaxt-actions` の `Wire` に、`f64`/`f32` の無限大(正・負)が `null` になること、負の小数・負の整数の往復、`Box<Option<i64>>` が `null` を読めることの試験を足しました(`cargo test -p reaxt-actions` 23件成功)。コードの動作は変えていません。未了: 7個以上のタプルは対象外のまま、Mac・iPhone の実機確認。
 - **English**: I added a test to `Wire` in `reaxt-actions` showing that positive and negative infinity for `f64`/`f32` become `null`, that negative decimals and integers round-trip, and that `Box<Option<i64>>` reads `null`. `cargo test -p reaxt-actions`: 23 pass. No behavior changed. Still open: tuples of 7 or more stay out of scope, and real-device checks on Mac and iPhone.
 - AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.
+
+## 2026-11-20 追記: 型違いの拒否と文字列エスケープの試験(自動の小さな保守) / Wrong-type rejection and string-escape test (small automated maintenance)
+- **日本語**: `reaxt-actions` の `Wire` に、型が違うJSON(`bool`に文字列や数、`String`に数や`null`、`Vec`にオブジェクト、`i64`に真偽値)がエラーになる試験と、引用符・円記号・改行を含む文字列の往復の試験を足しました(`cargo test -p reaxt-actions` 25件成功)。コードの動作は変えていません。未了: 7個以上のタプルは対象外のまま、Mac・iPhone の実機確認。
+- **English**: I added a test to `Wire` in `reaxt-actions` showing that JSON of the wrong type is rejected (a string or number for `bool`, a number or `null` for `String`, an object for `Vec`, a boolean for `i64`), and that a string containing a quote, a backslash and a newline round-trips. `cargo test -p reaxt-actions`: 25 pass. No behavior changed. Still open: tuples of 7 or more stay out of scope, and real-device checks on Mac and iPhone.
+- AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.
