@@ -174,6 +174,26 @@ impl Wire for f32 {
         GqlType::Float
     }
 }
+/// 2つ・3つ組のタプルは、長さ固定のJSON配列として扱う(GraphQLには `JSON` として見せる)。
+macro_rules! wire_tuple {
+    ($n:expr; $($t:ident : $i:tt),+) => {
+        impl<$($t: Wire),+> Wire for ($($t,)+) {
+            fn to_wire(&self) -> String {
+                let parts: Vec<String> = vec![$(self.$i.to_wire()),+];
+                format!("[{}]", parts.join(","))
+            }
+            fn from_wire(v: &LightValue) -> Result<Self, String> {
+                let a = v.as_array().ok_or("配列が必要です")?;
+                if a.len() != $n {
+                    return Err(format!("要素が{}個の配列が必要です", $n));
+                }
+                Ok(($($t::from_wire(&a[$i])?,)+))
+            }
+        }
+    };
+}
+wire_tuple!(2; A: 0, B: 1);
+wire_tuple!(3; A: 0, B: 1, C: 2);
 /// `Box<T>` は中身と同じ扱い(再帰する型を作るときに使う)。
 impl<T: Wire> Wire for Box<T> {
     fn to_wire(&self) -> String {
@@ -412,6 +432,19 @@ mod tests {
         assert_eq!(b.to_wire(), "[1,2]");
         assert_eq!(<Box<f64> as Wire>::gql_type(), GqlType::Float);
         assert_eq!(<f32 as Wire>::gql_type(), GqlType::Float);
+    }
+
+    #[test]
+    fn tuples_are_fixed_length_arrays() {
+        let t: (String, i64) = decode(r#"["a",2]"#).unwrap();
+        assert_eq!(t, ("a".to_string(), 2));
+        assert_eq!(t.to_wire(), r#"["a",2]"#);
+        let t3: (bool, Option<i64>, Vec<u8>) = decode("[true,null,[1]]").unwrap();
+        assert_eq!(t3, (true, None, vec![1]));
+        assert!(decode::<(i64, i64)>("[1]").is_err());
+        assert!(decode::<(i64, i64)>("[1,2,3]").is_err());
+        assert!(decode::<(i64, i64)>(r#"[1,"x"]"#).is_err());
+        assert_eq!(<(i64, i64) as Wire>::gql_type(), GqlType::Json);
     }
 
     #[test]

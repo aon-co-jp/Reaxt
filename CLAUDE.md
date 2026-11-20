@@ -646,3 +646,7 @@ English: Features that use AI/LLMs follow the file above: short context, caps an
 ## 2026-11-20 追記: `f32` と `Box<T>` に対応 / `f32` and `Box<T>` support
 **日本語(やさしい説明)**: Reaxt のアクションで、小数の `f32` と、再帰する型を作るときに使う `Box<T>` が使えるようになりました。どちらも GraphQL 上では `Float` や中身と同じ型として見えます。NaN と無限大は、これまでの `f64` と同じく `null` で返ります。試験は21件成功です。**未了**: タプル、`Option` の入れ子(`null` で段が区別できないため対象外のまま)。
 **English (plain words)**: Reaxt actions can now use `f32` (decimals) and `Box<T>` (used for recursive types). In GraphQL they appear as `Float` or as the inner type. NaN and infinity become `null`, the same as `f64`. All 21 tests pass. **Still open**: tuples, and nested `Option` (left out on purpose, because `null` cannot tell the levels apart).
+
+## 2026-11-20 追記: タプルに対応 / Tuple support
+**日本語(やさしい説明)**: Reaxt のアクションで、2つ組・3つ組のタプル(例: `(String, i64)`)が使えるようになりました。JSON では長さが決まった配列(`["a", 2]`)になり、長さが違うときや中身の型が違うときはエラーになります。GraphQL 上では `JSON` として見えます。試験は22件成功です。**未了**: 4つ以上のタプル(必要になってから)、`Option` の入れ子(対象外のまま)。
+**English (plain words)**: Reaxt actions can now use 2- and 3-element tuples (for example `(String, i64)`). In JSON they are fixed-length arrays (`["a", 2]`); a wrong length or a wrong inner type is an error. In GraphQL they appear as `JSON`. All 22 tests pass. **Still open**: tuples of four or more (when needed), and nested `Option` (left out on purpose).
