@@ -730,3 +730,8 @@ We verified the join not only with fake subgraphs but also with **independent, r
 - **日本語**: `reaxt-actions` の `Wire` のタプルは2〜6個組に対応していますが、ソースの注記が「2つ・3つ組」のままで、試験も6個組・不足の長さしか見ていませんでした。注記を「2〜6個組」に直し、4個組・5個組の往復と、長さ違いのエラーの試験を足しました(`cargo test -p reaxt-actions` 22件成功)。未了: 7個以上のタプルは対象外のまま、Mac・iPhone の実機確認。
 - **English**: `Wire` in `reaxt-actions` supports tuples of 2 to 6 elements, but the source comment still said "2 and 3" and the tests covered only the 6-tuple and a wrong length. The comment now says 2 to 6, and I added round-trip tests for 4- and 5-tuples plus length-mismatch errors (`cargo test -p reaxt-actions`: 22 pass). Still open: tuples of 7 or more stay out of scope, and real-device checks on Mac and iPhone.
 - AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.
+
+## 2026-11-20 追記: `gql_type` の試験を追加 / `gql_type` test added
+- **日本語**: `reaxt-actions` に `gql_type` の試験を足しました(`String`・`bool`・`Vec`・`Option` の入れ子、連想配列は`JSON`)。コードの変更なし。23件成功。未了: 7個以上のタプル、Mac・iPhone の実機確認。
+- **English**: Added a `gql_type` test in `reaxt-actions` (`String`, `bool`, nested `Vec` and `Option`; maps stay `JSON`). No behavior change; 23 tests pass. Still open: tuples of 7 or more, and real-device checks on Mac and iPhone.
+- AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.

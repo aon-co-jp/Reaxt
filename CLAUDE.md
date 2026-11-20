@@ -767,3 +767,8 @@ English: Features that use AI/LLMs follow the file above: short context, caps an
 - **日本語**: `reaxt-actions` の `Wire` のタプルは2〜6個組に対応していますが、ソースの注記が「2つ・3つ組」のままで、試験も6個組・不足の長さしか見ていませんでした。注記を「2〜6個組」に直し、4個組・5個組の往復と、長さ違いのエラーの試験を足しました(`cargo test -p reaxt-actions` 22件成功)。未了: 7個以上のタプルは対象外のまま、Mac・iPhone の実機確認。
 - **English**: `Wire` in `reaxt-actions` supports tuples of 2 to 6 elements, but the source comment still said "2 and 3" and the tests covered only the 6-tuple and a wrong length. The comment now says 2 to 6, and I added round-trip tests for 4- and 5-tuples plus length-mismatch errors (`cargo test -p reaxt-actions`: 22 pass). Still open: tuples of 7 or more stay out of scope, and real-device checks on Mac and iPhone.
 - AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.
+
+## 2026-11-20 追記: `gql_type` の試験を追加(自動の小さな保守) / `gql_type` test added (small automated maintenance)
+- **日本語**: `reaxt-actions` の `Wire::gql_type`(GraphQL上の型)の試験は、数値・`f32`・`Box`・タプルにしか無かったので、`String`・`bool`・`Vec`・`Option` の入れ子、連想配列(`BTreeMap`・`HashMap`は`JSON`のまま)を固定する試験を足しました(`cargo test -p reaxt-actions` 23件成功)。コードの変更はありません。未了: 7個以上のタプルは対象外のまま、Mac・iPhone の実機確認。
+- **English**: The tests for `Wire::gql_type` (the GraphQL type) in `reaxt-actions` covered only numbers, `f32`, `Box` and tuples. I added a test that pins the types for `String`, `bool`, nested `Vec` and `Option`, and the maps (`BTreeMap` and `HashMap` stay `JSON`). `cargo test -p reaxt-actions`: 23 pass. No code behavior changed. Still open: tuples of 7 or more stay out of scope, and real-device checks on Mac and iPhone.
+- AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.
