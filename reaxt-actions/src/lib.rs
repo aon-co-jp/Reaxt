@@ -194,6 +194,9 @@ macro_rules! wire_tuple {
 }
 wire_tuple!(2; A: 0, B: 1);
 wire_tuple!(3; A: 0, B: 1, C: 2);
+wire_tuple!(4; A: 0, B: 1, C: 2, D: 3);
+wire_tuple!(5; A: 0, B: 1, C: 2, D: 3, E: 4);
+wire_tuple!(6; A: 0, B: 1, C: 2, D: 3, E: 4, F: 5);
 /// `Box<T>` は中身と同じ扱い(再帰する型を作るときに使う)。
 impl<T: Wire> Wire for Box<T> {
     fn to_wire(&self) -> String {
@@ -441,6 +444,9 @@ mod tests {
         assert_eq!(t.to_wire(), r#"["a",2]"#);
         let t3: (bool, Option<i64>, Vec<u8>) = decode("[true,null,[1]]").unwrap();
         assert_eq!(t3, (true, None, vec![1]));
+        let t6: (i64, i64, i64, i64, i64, String) = decode(r#"[1,2,3,4,5,"z"]"#).unwrap();
+        assert_eq!(t6.to_wire(), r#"[1,2,3,4,5,"z"]"#);
+        assert!(decode::<(i64, i64, i64, i64)>("[1,2,3]").is_err());
         assert!(decode::<(i64, i64)>("[1]").is_err());
         assert!(decode::<(i64, i64)>("[1,2,3]").is_err());
         assert!(decode::<(i64, i64)>(r#"[1,"x"]"#).is_err());

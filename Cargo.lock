@@ -2590,7 +2590,7 @@ source = "git+https://github.com/aon-co-jp/RS-CSS#1523b1049b0e34f6bab4e2eadc3042
 
 [[package]]
 name = "reaxt"
-version = "0.1.2"
+version = "0.1.3"
 dependencies = [
  "rcss3",
  "rhtml5",
@@ -2600,7 +2600,7 @@ dependencies = [
 
 [[package]]
 name = "reaxt-actions"
-version = "0.1.2"
+version = "0.1.3"
 dependencies = [
  "js-sys",
  "reaxt",
@@ -2612,7 +2612,7 @@ dependencies = [
 
 [[package]]
 name = "reaxt-cli"
-version = "0.1.2"
+version = "0.1.3"
 
 [[package]]
 name = "reaxt-counter"
@@ -2626,14 +2626,14 @@ dependencies = [
 
 [[package]]
 name = "reaxt-db"
-version = "0.1.2"
+version = "0.1.3"
 dependencies = [
  "rust-json 0.1.0",
 ]
 
 [[package]]
 name = "reaxt-rpoem"
-version = "0.1.2"
+version = "0.1.3"
 dependencies = [
  "bytes",
  "http-body",
