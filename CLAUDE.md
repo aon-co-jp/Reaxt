@@ -698,3 +698,6 @@ English: Features that use AI/LLMs follow the file above: short context, caps an
 - Left out on purpose: nested `Option` (`null` cannot tell the levels apart).
 
 **Rules**: we go on with unfinished work without asking; we test and verify on real systems before saying "done"; we never write secrets; we add no new REST APIs; Node.js is used only for tests the owner allowed (the Apollo interop).
+
+## 2026-11-20 追記: v0.1.3(タプルを6個まで・`f32`・`Box<T>`) / v0.1.3
+**日本語(やさしい説明)**: v0.1.3 を公開します。`f32`・`Box<T>`・2〜6個のタプルが Reaxt のアクションで使えます(6個まで。7個以上は対象外)。試験は22件成功です。**English (plain words)**: v0.1.3 adds `f32`, `Box<T>` and tuples of 2 to 6 elements to Reaxt actions (7 or more is out of scope). All 22 tests pass.
