@@ -162,6 +162,30 @@ impl Wire for f64 {
         GqlType::Float
     }
 }
+/// `f32` は `f64` に広げて扱う(小数点以下の見た目が変わらないよう、f32のまま文字列にする)。
+impl Wire for f32 {
+    fn to_wire(&self) -> String {
+        if self.is_finite() { self.to_string() } else { "null".to_string() }
+    }
+    fn from_wire(v: &LightValue) -> Result<Self, String> {
+        v.as_f64().map(|x| x as f32).ok_or_else(|| "数値が必要です".into())
+    }
+    fn gql_type() -> GqlType {
+        GqlType::Float
+    }
+}
+/// `Box<T>` は中身と同じ扱い(再帰する型を作るときに使う)。
+impl<T: Wire> Wire for Box<T> {
+    fn to_wire(&self) -> String {
+        (**self).to_wire()
+    }
+    fn from_wire(v: &LightValue) -> Result<Self, String> {
+        T::from_wire(v).map(Box::new)
+    }
+    fn gql_type() -> GqlType {
+        T::gql_type()
+    }
+}
 impl Wire for bool {
     fn to_wire(&self) -> String {
         self.to_string()
@@ -375,6 +399,19 @@ mod tests {
         assert_eq!(o, Some(vec![Some("x".into()), None]));
         assert_eq!(decode::<Option<Vec<i64>>>("null").unwrap(), None);
         assert!(decode::<HashMap<String, i64>>(r#"{"k":"no"}"#).is_err());
+    }
+
+    #[test]
+    fn f32_and_box_round_trip() {
+        assert_eq!(decode::<f32>("1.5").unwrap(), 1.5f32);
+        assert_eq!(1.5f32.to_wire(), "1.5");
+        assert_eq!(f32::NAN.to_wire(), "null");
+        assert!(decode::<f32>(r#""x""#).is_err());
+        let b: Box<Vec<i64>> = decode("[1,2]").unwrap();
+        assert_eq!(*b, vec![1, 2]);
+        assert_eq!(b.to_wire(), "[1,2]");
+        assert_eq!(<Box<f64> as Wire>::gql_type(), GqlType::Float);
+        assert_eq!(<f32 as Wire>::gql_type(), GqlType::Float);
     }
 
     #[test]
