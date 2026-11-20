@@ -459,6 +459,25 @@ mod tests {
     }
 
     #[test]
+    fn gql_types_of_basic_and_container_types() {
+        use std::collections::{BTreeMap, HashMap};
+        assert_eq!(<String as Wire>::gql_type(), GqlType::Str);
+        assert_eq!(<bool as Wire>::gql_type(), GqlType::Boolean);
+        assert_eq!(<i64 as Wire>::gql_type(), GqlType::Int);
+        assert_eq!(
+            <Vec<Option<String>> as Wire>::gql_type(),
+            GqlType::List(Box::new(GqlType::Nullable(Box::new(GqlType::Str))))
+        );
+        assert_eq!(
+            <Option<Vec<i64>> as Wire>::gql_type(),
+            GqlType::Nullable(Box::new(GqlType::List(Box::new(GqlType::Int))))
+        );
+        // 連想配列はGraphQLに型が無いので JSON のまま
+        assert_eq!(<BTreeMap<String, i64> as Wire>::gql_type(), GqlType::Json);
+        assert_eq!(<HashMap<String, i64> as Wire>::gql_type(), GqlType::Json);
+    }
+
+    #[test]
     fn missing_field_is_none_for_option_and_error_otherwise() {
         #[derive(Debug)]
         struct P {
