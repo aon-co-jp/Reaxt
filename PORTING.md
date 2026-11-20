@@ -734,4 +734,8 @@ We verified the join not only with fake subgraphs but also with **independent, r
 ## 2026-11-20 追記: `gql_type` の試験を追加 / `gql_type` test added
 - **日本語**: `reaxt-actions` に `gql_type` の試験を足しました(`String`・`bool`・`Vec`・`Option` の入れ子、連想配列は`JSON`)。コードの変更なし。23件成功。未了: 7個以上のタプル、Mac・iPhone の実機確認。
 - **English**: Added a `gql_type` test in `reaxt-actions` (`String`, `bool`, nested `Vec` and `Option`; maps stay `JSON`). No behavior change; 23 tests pass. Still open: tuples of 7 or more, and real-device checks on Mac and iPhone.
+
+## 2026-11-20 追記: 無限大と負数の試験 / Infinity and negative-number test
+- **日本語**: `reaxt-actions` に `Wire` の試験を1件追加(無限大は `null`、負数の往復、`Box<Option<i64>>`)。動作の変更なし。未了: 7個以上のタプル、Mac・iPhone の実機確認。
+- **English**: One `Wire` test added in `reaxt-actions` (infinity becomes `null`, negative numbers round-trip, `Box<Option<i64>>`). No behavior change. Open: tuples of 7 or more, and real-device checks on Mac and iPhone.
 - AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.
