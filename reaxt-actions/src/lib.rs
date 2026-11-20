@@ -174,7 +174,7 @@ impl Wire for f32 {
         GqlType::Float
     }
 }
-/// 2つ・3つ組のタプルは、長さ固定のJSON配列として扱う(GraphQLには `JSON` として見せる)。
+/// 2〜6個組のタプルは、長さ固定のJSON配列として扱う(GraphQLには `JSON` として見せる)。
 macro_rules! wire_tuple {
     ($n:expr; $($t:ident : $i:tt),+) => {
         impl<$($t: Wire),+> Wire for ($($t,)+) {
@@ -446,6 +446,11 @@ mod tests {
         assert_eq!(t3, (true, None, vec![1]));
         let t6: (i64, i64, i64, i64, i64, String) = decode(r#"[1,2,3,4,5,"z"]"#).unwrap();
         assert_eq!(t6.to_wire(), r#"[1,2,3,4,5,"z"]"#);
+        let t4: (i64, String, bool, Option<i64>) = decode(r#"[1,"a",false,null]"#).unwrap();
+        assert_eq!(t4.to_wire(), r#"[1,"a",false,null]"#);
+        let t5: (i64, i64, i64, i64, i64) = decode("[1,2,3,4,5]").unwrap();
+        assert_eq!(t5.4, 5);
+        assert!(decode::<(i64, i64, i64, i64, i64)>("[1,2,3,4]").is_err());
         assert!(decode::<(i64, i64, i64, i64)>("[1,2,3]").is_err());
         assert!(decode::<(i64, i64)>("[1]").is_err());
         assert!(decode::<(i64, i64)>("[1,2,3]").is_err());
