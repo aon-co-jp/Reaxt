@@ -1,0 +1,12 @@
+{
+    "name":  "apollo-interop-test",
+    "private":  true,
+    "type":  "module",
+    "description":  "Reaxt-gateway interop test only (Node.js allowed for this test)",
+    "dependencies":  {
+                         "@apollo/server":  "^5.5.2",
+                         "@apollo/subgraph":  "^2.17.0",
+                         "graphql":  "^16.15.0",
+                         "graphql-tag":  "^2.12.7"
+                     }
+}
