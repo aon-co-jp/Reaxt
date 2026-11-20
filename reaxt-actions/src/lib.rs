@@ -438,6 +438,18 @@ mod tests {
     }
 
     #[test]
+    fn infinity_is_null_and_negative_numbers_round_trip() {
+        assert_eq!(f64::INFINITY.to_wire(), "null");
+        assert_eq!(f64::NEG_INFINITY.to_wire(), "null");
+        assert_eq!(f32::INFINITY.to_wire(), "null");
+        assert_eq!(decode::<f64>("-2.5").unwrap(), -2.5);
+        assert_eq!(decode::<i64>("-7").unwrap(), -7);
+        assert_eq!((-7i64).to_wire(), "-7");
+        let b: Box<Option<i64>> = decode("null").unwrap();
+        assert_eq!(*b, None);
+    }
+
+    #[test]
     fn tuples_are_fixed_length_arrays() {
         let t: (String, i64) = decode(r#"["a",2]"#).unwrap();
         assert_eq!(t, ("a".to_string(), 2));
