@@ -425,6 +425,20 @@ mod tests {
     }
 
     #[test]
+    fn wrong_json_types_are_rejected_and_strings_are_escaped() {
+        assert!(decode::<bool>(r#""true""#).is_err());
+        assert!(decode::<bool>("1").is_err());
+        assert!(decode::<String>("5").is_err());
+        assert!(decode::<String>("null").is_err());
+        assert!(decode::<Vec<i64>>(r#"{"a":1}"#).is_err());
+        assert!(decode::<i64>("true").is_err());
+        let s = "a\"b\\c\nd".to_string();
+        let wire = s.to_wire();
+        assert!(!wire.contains('\n'));
+        assert_eq!(decode::<String>(&wire).unwrap(), s);
+    }
+
+    #[test]
     fn f32_and_box_round_trip() {
         assert_eq!(decode::<f32>("1.5").unwrap(), 1.5f32);
         assert_eq!(1.5f32.to_wire(), "1.5");
