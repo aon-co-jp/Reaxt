@@ -174,7 +174,7 @@ impl Wire for f32 {
         GqlType::Float
     }
 }
-/// 2〜6個組のタプルは、長さ固定のJSON配列として扱う(GraphQLには `JSON` として見せる)。
+/// 2〜12個組のタプルは(標準ライブラリやserdeと同じく12個まで)、長さ固定のJSON配列として扱う(GraphQLには `JSON` として見せる)。
 macro_rules! wire_tuple {
     ($n:expr; $($t:ident : $i:tt),+) => {
         impl<$($t: Wire),+> Wire for ($($t,)+) {
@@ -197,6 +197,12 @@ wire_tuple!(3; A: 0, B: 1, C: 2);
 wire_tuple!(4; A: 0, B: 1, C: 2, D: 3);
 wire_tuple!(5; A: 0, B: 1, C: 2, D: 3, E: 4);
 wire_tuple!(6; A: 0, B: 1, C: 2, D: 3, E: 4, F: 5);
+wire_tuple!(7; A: 0, B: 1, C: 2, D: 3, E: 4, F: 5, G: 6);
+wire_tuple!(8; A: 0, B: 1, C: 2, D: 3, E: 4, F: 5, G: 6, H: 7);
+wire_tuple!(9; A: 0, B: 1, C: 2, D: 3, E: 4, F: 5, G: 6, H: 7, I: 8);
+wire_tuple!(10; A: 0, B: 1, C: 2, D: 3, E: 4, F: 5, G: 6, H: 7, I: 8, J: 9);
+wire_tuple!(11; A: 0, B: 1, C: 2, D: 3, E: 4, F: 5, G: 6, H: 7, I: 8, J: 9, K: 10);
+wire_tuple!(12; A: 0, B: 1, C: 2, D: 3, E: 4, F: 5, G: 6, H: 7, I: 8, J: 9, K: 10, L: 11);
 /// `Box<T>` は中身と同じ扱い(再帰する型を作るときに使う)。
 impl<T: Wire> Wire for Box<T> {
     fn to_wire(&self) -> String {
@@ -482,6 +488,21 @@ mod tests {
         assert!(decode::<(i64, i64)>("[1,2,3]").is_err());
         assert!(decode::<(i64, i64)>(r#"[1,"x"]"#).is_err());
         assert_eq!(<(i64, i64) as Wire>::gql_type(), GqlType::Json);
+    }
+
+    #[test]
+    fn tuples_up_to_twelve_round_trip() {
+        type T7 = (i64, i64, i64, i64, i64, i64, String);
+        let t7: T7 = decode(r#"[1,2,3,4,5,6,"g"]"#).unwrap();
+        assert_eq!(t7.6, "g");
+        assert_eq!(t7.to_wire(), r#"[1,2,3,4,5,6,"g"]"#);
+        type T12 = (u8, u8, u8, u8, u8, u8, u8, u8, u8, u8, Option<i64>, bool);
+        let t12: T12 = decode("[1,2,3,4,5,6,7,8,9,10,null,true]").unwrap();
+        assert_eq!((t12.9, t12.10, t12.11), (10, None, true));
+        assert_eq!(t12.to_wire(), "[1,2,3,4,5,6,7,8,9,10,null,true]");
+        assert!(decode::<T7>("[1,2,3,4,5,6]").is_err());
+        assert!(decode::<T12>("[1,2,3,4,5,6,7,8,9,10,null,true,1]").is_err());
+        assert_eq!(<T12 as Wire>::gql_type(), GqlType::Json);
     }
 
     #[test]
