@@ -929,3 +929,8 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - **日本語**: `reaxt-actions` に、`wire_struct!` の `gql_type`(構造体名・フィールド順・null 可・配列)の試験を足しました(32件成功)。動作の変更なし。未了: Mac・iPhone の実機確認。
 - **English**: Added a `reaxt-actions` test for `wire_struct!`'s `gql_type` (struct name, field order, nullable, list); 32 pass. No behavior change. Still open: real-device checks on Mac and iPhone.
 - AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.
+
+## 2026-11-21 追記: 入れ子の `wire_struct!` の試験(自動の小さな保守) / Nested `wire_struct!` test (small automated maintenance)
+- **日本語**: 構造体の中に構造体(`Inner`)・その配列・`Option<Inner>` を持つ型が往復できること、中の型が壊れたときのエラーに外側のフィールド名(`first`)が入ること、GraphQL の型も入れ子になること、の試験を足しました(`cargo test -p reaxt-actions` 34件成功)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。
+- **English**: I added a test showing that a struct holding another struct, a list of structs and an `Option` of a struct round-trips; that an error inside the nested struct names the outer field (`first`); and that the GraphQL type nests as well. `cargo test -p reaxt-actions`: 34 pass. No behavior changed. Still open: real-device checks on Mac and iPhone (no devices).
+- English: AI-translated and AI-reviewed for native fluency; not yet checked by a human native speaker.
