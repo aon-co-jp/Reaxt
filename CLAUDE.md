@@ -895,3 +895,8 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 **آنچه مانده است:** فقط بررسی روی Mac و iPhone واقعی (این دستگاه‌ها را اینجا نداریم). `Option` تودرتو عمداً کنار گذاشته شده است، چون با `null` نمی‌توان سطح‌ها را از هم تشخیص داد.
 **قواعد:** بدون پرسیدن ادامه می‌دهیم؛ فقط پس از بررسی روی سامانه‌های واقعی می‌نویسیم «انجام شد»؛ هرگز اطلاعات محرمانه نمی‌نویسیم؛ REST API تازه اضافه نمی‌کنیم.
 *دربارهٔ ترجمه: متن ژاپنی متن اصلی است. زبان‌های دیگر را هوش مصنوعی ترجمه کرده و سپس بررسی کرده است که به همان اندازهٔ نوشتهٔ یک گویشور بومی روان و طبیعی باشند. هنوز هیچ گویشور بومیِ انسانی آن‌ها را بازبینی نکرده است.*
+
+## 2026-11-21 追記: 空の集合・日本語・13個組の拒否の試験(自動の小さな保守) / Empty containers, Unicode and 13-tuple rejection test (small automated maintenance)
+- **日本語**: `reaxt-actions` の `Wire` に、空配列・空の連想配列の往復、日本語と記号を含む文字列の往復、12個組のタプルに13要素の配列を渡すとエラーになる試験を足しました(`cargo test -p reaxt-actions` 27件成功。兄弟リポジトリが一部欠けた環境のため、`reaxt-actions` だけを切り出して試験)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。
+- **English**: I added a test to `Wire` in `reaxt-actions` covering round-trips of empty arrays and maps, a string with Japanese text and symbols, and rejection of a 13-element array for a 12-tuple. `cargo test -p reaxt-actions`: 27 pass (run on `reaxt-actions` alone because some sibling repos were missing here). No behavior changed. Still open: real-device checks on Mac and iPhone (no devices).
+- 英語は AI 翻訳(ネイティブ確認前)/ The English is AI-written and not yet checked by a native speaker.
