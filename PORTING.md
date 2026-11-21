@@ -934,3 +934,7 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - **日本語**: 構造体の中に構造体(`Inner`)・その配列・`Option<Inner>` を持つ型が往復できること、中の型が壊れたときのエラーに外側のフィールド名(`first`)が入ること、GraphQL の型も入れ子になること、の試験を足しました(`cargo test -p reaxt-actions` 34件成功)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。
 - **English**: I added a test showing that a struct holding another struct, a list of structs and an `Option` of a struct round-trips; that an error inside the nested struct names the outer field (`first`); and that the GraphQL type nests as well. `cargo test -p reaxt-actions`: 34 pass. No behavior changed. Still open: real-device checks on Mac and iPhone (no devices).
 - English: AI-translated and AI-reviewed for native fluency; not yet checked by a human native speaker.
+## 2026-11-21 `operationName` 選択のコメント不具合 / Comment bug in `operationName` selection
+- **日本語**: `reaxt-actions/src/subgraph.rs` の `select_operation_text` が、操作の直前のコメントで操作を見失う不具合を修正。移植先でこの関数を使うときは、先頭のコメントを読み飛ばす処理(`'#'` の分岐)も一緒に持っていくこと。未了: Mac・iPhone の実機確認。
+- **English**: Fixed `select_operation_text` in `reaxt-actions/src/subgraph.rs`, which lost an operation that followed a comment. When porting the function, take the leading-comment skip (the `'#'` branch) with it. Still open: real-device checks on Mac and iPhone.
+- AI-translated and AI-reviewed for native fluency; not yet checked by a human native speaker.
