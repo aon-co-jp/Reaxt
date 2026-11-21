@@ -583,6 +583,19 @@ mod tests {
     }
 
     #[test]
+    fn empty_containers_unicode_and_oversized_tuple() {
+        use std::collections::BTreeMap;
+        assert_eq!(decode::<Vec<i64>>("[]").unwrap(), Vec::<i64>::new());
+        assert_eq!(Vec::<i64>::new().to_wire(), "[]");
+        assert_eq!(decode::<BTreeMap<String, u32>>("{}").unwrap().len(), 0);
+        let s: String = decode("\"日本語 ✓\"").unwrap();
+        assert_eq!(s, "日本語 ✓");
+        assert_eq!(decode::<String>(&s.to_wire()).unwrap(), s);
+        let thirteen = "[1,2,3,4,5,6,7,8,9,10,11,12,13]";
+        assert!(decode::<(u8, u8, u8, u8, u8, u8, u8, u8, u8, u8, u8, u8)>(thirteen).is_err());
+    }
+
+    #[test]
     fn wire_struct_round_trips_and_rejects() {
         let m = Mixed { name: "a\"b\n".into(), on: true, ids: vec![1, 2, 3] };
         let json = m.to_wire();
