@@ -924,3 +924,8 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - **日本語**: `reaxt-actions` の `Wire` の試験を足しました(`u16`/`i16`/`i32` の限界、`usize` の負数、整数型への小数の拒否。31件成功)。動作は変えていません。未了: 2^53 超の整数は RS-JSON 側の限界、Mac・iPhone の実機確認。
 - **English**: Added `Wire` tests in `reaxt-actions` (limits of `u16`/`i16`/`i32`, a negative `usize`, decimals rejected for integer types; 31 pass). No behavior changed. Still open: integers above 2^53 (an RS-JSON limit), and real-device checks on Mac and iPhone.
 - AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.
+
+## 2026-11-21 追記: `wire_struct!` の GraphQL 型の試験 / `wire_struct!` GraphQL-type test
+- **日本語**: `reaxt-actions` に、`wire_struct!` の `gql_type`(構造体名・フィールド順・null 可・配列)の試験を足しました(32件成功)。動作の変更なし。未了: Mac・iPhone の実機確認。
+- **English**: Added a `reaxt-actions` test for `wire_struct!`'s `gql_type` (struct name, field order, nullable, list); 32 pass. No behavior change. Still open: real-device checks on Mac and iPhone.
+- AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.

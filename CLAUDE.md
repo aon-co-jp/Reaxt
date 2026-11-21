@@ -969,3 +969,8 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - **日本語**: `reaxt-actions` の `Wire` に、`u16`・`i16`・`i32` の限界ちょうどと1つ超えの拒否、`usize` に負数の拒否、`i32`・`u8` に小数(`1.5`・`0.5`)を渡すとエラーになる試験を足しました(`cargo test -p reaxt-actions` 31件成功)。コードの動作は変えていません。未了: 2^53 を超える整数が読めない限界は RS-JSON(`LightValue` が f64)側の課題で、ここでは直せません。Mac・iPhone の実機確認(実機なし)。
 - **English**: I added tests to `Wire` in `reaxt-actions` for the exact limits of `u16`, `i16` and `i32` and rejection one past them, a negative number for `usize`, and an error when a decimal (`1.5`, `0.5`) is given to `i32` or `u8`. `cargo test -p reaxt-actions`: 31 pass. No behavior changed. Still open: integers above 2^53 cannot be read, which is an RS-JSON issue (`LightValue` stores f64) and cannot be fixed here; real-device checks on Mac and iPhone (no devices).
 - AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.
+
+## 2026-11-21 追記: `wire_struct!` の GraphQL 型の試験(自動の小さな保守) / `wire_struct!` GraphQL-type test (small automated maintenance)
+- **日本語**: `wire_struct!` が出す GraphQL の型(構造体名・フィールドの順序・`Option` は null 可・`Vec` は配列・`bool`/整数の型)を固定する試験を足しました(`cargo test -p reaxt-actions` 32件成功)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。
+- **English**: I added a test that pins the GraphQL type produced by `wire_struct!`: the struct name, field order, `Option` as nullable, `Vec` as a list, and the `bool` and integer types. `cargo test -p reaxt-actions`: 32 pass. No behavior changed. Still open: real-device checks on Mac and iPhone (no devices).
+- AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.
