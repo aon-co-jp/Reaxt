@@ -858,3 +858,8 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 **آنچه مانده است:** فقط بررسی روی Mac و iPhone واقعی (این دستگاه‌ها را اینجا نداریم). `Option` تودرتو عمداً کنار گذاشته شده است، چون با `null` نمی‌توان سطح‌ها را از هم تشخیص داد.
 **قواعد:** بدون پرسیدن ادامه می‌دهیم؛ فقط پس از بررسی روی سامانه‌های واقعی می‌نویسیم «انجام شد»؛ هرگز اطلاعات محرمانه نمی‌نویسیم؛ REST API تازه اضافه نمی‌کنیم.
 *دربارهٔ ترجمه: متن ژاپنی متن اصلی است. زبان‌های دیگر را هوش مصنوعی ترجمه کرده و سپس بررسی کرده است که به همان اندازهٔ نوشتهٔ یک گویشور بومی روان و طبیعی باشند. هنوز هیچ گویشور بومیِ انسانی آن‌ها را بازبینی نکرده است.*
+
+## 2026-11-21 追記: 8・9・11個組タプルの試験(自動の小さな保守) / Tests for 8-, 9- and 11-element tuples (small automated maintenance)
+- **日本語**: `reaxt-actions` の `Wire` のタプルは2〜12個組に対応していますが、試験は7個組と12個組までしかありませんでした。8個組・9個組・11個組の往復と、要素が足りないときのエラーの試験を足しました(`cargo test -p reaxt-actions` 27件成功)。コードの動作は変えていません。未了: 13個以上のタプルは対象外のまま、Mac・iPhone の実機確認。
+- **English**: `Wire` in `reaxt-actions` supports tuples of 2 to 12 elements, but the tests only covered 7 and 12. I added round-trip tests for 8-, 9- and 11-element tuples, plus an error when an element is missing (`cargo test -p reaxt-actions`: 27 pass). No behavior changed. Still open: tuples of 13 or more stay out of scope, and real-device checks on Mac and iPhone.
+- English was AI-translated and AI-reviewed for native fluency; not yet checked by a human native speaker.
