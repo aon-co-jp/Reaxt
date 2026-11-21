@@ -521,6 +521,24 @@ mod tests {
     }
 
     #[test]
+    fn ten_tuple_and_integer_boundaries() {
+        type T10 = (u8, u8, u8, u8, u8, u8, u8, u8, u8, String);
+        let t10: T10 = decode(r#"[1,2,3,4,5,6,7,8,9,"j"]"#).unwrap();
+        assert_eq!(t10.9, "j");
+        assert_eq!(t10.to_wire(), r#"[1,2,3,4,5,6,7,8,9,"j"]"#);
+        assert!(decode::<T10>("[1,2,3,4,5,6,7,8,9]").is_err());
+        // 型の限界ちょうどは通り、1つ超えると拒否される
+        assert_eq!(decode::<u8>("255").unwrap(), 255);
+        assert!(decode::<u8>("256").is_err());
+        assert_eq!(decode::<i8>("-128").unwrap(), -128);
+        assert!(decode::<i8>("-129").is_err());
+        // i64の最大値は JSON 数値(f64)経由のため読み込めない(既知の限界)。2^53 までは正確
+        assert_eq!(decode::<i64>("9007199254740992").unwrap(), 9_007_199_254_740_992);
+        assert_eq!(i64::MIN.to_wire(), "-9223372036854775808");
+        assert!(decode::<u32>("-1").is_err());
+    }
+
+    #[test]
     fn gql_types_of_basic_and_container_types() {
         use std::collections::{BTreeMap, HashMap};
         assert_eq!(<String as Wire>::gql_type(), GqlType::Str);
