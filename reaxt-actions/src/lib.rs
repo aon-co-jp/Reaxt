@@ -538,6 +538,21 @@ mod tests {
         assert!(decode::<u32>("-1").is_err());
     }
 
+
+    #[test]
+    fn mid_size_integer_boundaries_and_fractions() {
+        assert_eq!(decode::<u16>("65535").unwrap(), 65535);
+        assert!(decode::<u16>("65536").is_err());
+        assert_eq!(decode::<i16>("-32768").unwrap(), -32768);
+        assert!(decode::<i16>("32768").is_err());
+        assert_eq!(decode::<i32>("2147483647").unwrap(), i32::MAX);
+        assert!(decode::<i32>("2147483648").is_err());
+        assert!(decode::<usize>("-1").is_err());
+        assert_eq!(decode::<isize>("-5").unwrap(), -5);
+        // 小数は整数として読めない
+        assert!(decode::<i32>("1.5").is_err());
+        assert!(decode::<u8>("0.5").is_err());
+    }
     #[test]
     fn gql_types_of_basic_and_container_types() {
         use std::collections::{BTreeMap, HashMap};
