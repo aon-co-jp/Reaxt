@@ -711,6 +711,41 @@ mod tests {
         }
     }
 
+    #[derive(Debug, PartialEq)]
+    struct Inner {
+        n: i64,
+    }
+    crate::wire_struct!(Inner { n: i64 });
+    #[derive(Debug, PartialEq)]
+    struct Outer {
+        first: Inner,
+        rest: Vec<Inner>,
+        extra: Option<Inner>,
+    }
+    crate::wire_struct!(Outer { first: Inner, rest: Vec<Inner>, extra: Option<Inner> });
+
+    #[test]
+    fn nested_wire_structs_round_trip_and_report_the_field_path() {
+        let o: Outer = decode(r#"{"first":{"n":1},"rest":[{"n":2},{"n":3}]}"#).unwrap();
+        assert_eq!(o.first, Inner { n: 1 });
+        assert_eq!(o.rest.len(), 2);
+        assert_eq!(o.extra, None);
+        assert_eq!(decode::<Outer>(&o.to_wire()).unwrap(), o);
+        // An error inside a nested struct names the outer field.
+        let e = decode::<Outer>(r#"{"first":{"n":"x"},"rest":[]}"#).unwrap_err();
+        assert!(e.contains("first"), "{e}");
+        // The GraphQL type nests too.
+        match <Outer as Wire>::gql_type() {
+            GqlType::Object { name, fields } => {
+                assert_eq!(name, "Outer");
+                assert!(matches!(&fields[0].1, GqlType::Object { name: "Inner", .. }));
+                assert!(matches!(&fields[1].1, GqlType::List(_)));
+                assert!(matches!(&fields[2].1, GqlType::Nullable(_)));
+            }
+            other => panic!("expected Object, got {other:?}"),
+        }
+    }
+
     fn app() -> App {
         let counter = Arc::new(AtomicU32::new(0));
         App::new("t")

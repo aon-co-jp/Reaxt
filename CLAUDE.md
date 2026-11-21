@@ -978,3 +978,8 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 ## 2026-11-21 追記: 連想配列の出力順と非オブジェクト拒否の試験(自動の小さな保守) / Map ordering and non-object rejection test (small automated maintenance)
 - **日本語**: `reaxt-actions` の `Wire` に、`HashMap` の出力がキー順になること、空の連想配列が `{}` になること、配列・`null`・数値を連想配列として読むとエラーになることの試験を足しました(`cargo test -p reaxt-actions` 33件成功)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。今回は日本語と英語のみ書き、ほかの言語の訳は作っていません(ネイティブ確認前の扱いのまま)。
 - **English**: I added a test to `Wire` in `reaxt-actions` showing that `HashMap` output is key-sorted, an empty map is `{}`, and an array, `null` or a number is rejected when read as a map. `cargo test -p reaxt-actions`: 33 pass. No behavior changed. Still open: real-device checks on Mac and iPhone (no devices). Only Japanese and English were written this time; no other translations were produced (they remain not native-checked).
+
+## 2026-11-21 追記: 入れ子の `wire_struct!` の試験(自動の小さな保守) / Nested `wire_struct!` test (small automated maintenance)
+- **日本語**: 構造体の中に構造体(`Inner`)・その配列・`Option<Inner>` を持つ型が往復できること、中の型が壊れたときのエラーに外側のフィールド名(`first`)が入ること、GraphQL の型も入れ子になること、の試験を足しました(`cargo test -p reaxt-actions` 34件成功)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。
+- **English**: I added a test showing that a struct holding another struct, a list of structs and an `Option` of a struct round-trips; that an error inside the nested struct names the outer field (`first`); and that the GraphQL type nests as well. `cargo test -p reaxt-actions`: 34 pass. No behavior changed. Still open: real-device checks on Mac and iPhone (no devices).
+- English: AI-translated and AI-reviewed for native fluency; not yet checked by a human native speaker.
