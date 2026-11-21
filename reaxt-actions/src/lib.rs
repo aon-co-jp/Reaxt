@@ -620,6 +620,26 @@ mod tests {
         assert!(decode::<Add>("{\"by\":1,\"by\":2}").is_err());
     }
 
+    #[derive(Debug, PartialEq)]
+    struct Opt {
+        id: u32,
+        note: Option<String>,
+    }
+    crate::wire_struct!(Opt { id: u32, note: Option<String> });
+
+    #[test]
+    fn wire_struct_option_field_null_missing_and_unknown_keys() {
+        let a: Opt = decode(r#"{"id":1,"note":null}"#).unwrap();
+        let b: Opt = decode(r#"{"id":1}"#).unwrap();
+        assert_eq!(a, b);
+        let c: Opt = decode(r#"{"id":2,"note":"hi"}"#).unwrap();
+        assert_eq!(c.note.as_deref(), Some("hi"));
+        assert_eq!(decode::<Opt>(&c.to_wire()).unwrap(), c);
+        assert_eq!(decode::<Opt>(&a.to_wire()).unwrap(), a);
+        // The required field is still required.
+        assert!(decode::<Opt>(r#"{"note":"x"}"#).unwrap_err().contains("id"));
+    }
+
     fn app() -> App {
         let counter = Arc::new(AtomicU32::new(0));
         App::new("t")

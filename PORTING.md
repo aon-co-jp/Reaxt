@@ -915,3 +915,7 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 ### فارسی
 **کاری که انجام دادیم:** CI (بررسی‌های خودکار GitHub) در RPoem و open-cosmo در بیش از ۶۰ اجرای پیاپی شکست خورده بود. علت، خطا در برنامه نبود؛ بخش‌هایی از کد قواعد نگارش (قالب‌بندی `rustfmt` و هشدارهای `clippy`) را رعایت نمی‌کردند. کد را قالب‌بندی کردیم، هشدارها را یکی‌یکی رفع کردیم و مطمئن شدیم که CI اکنون موفق است. همهٔ آزمون‌ها موفق‌اند: ۵۸۹ آزمون در RPoem و ۴۹۵ آزمون در open-cosmo. رفتار برنامه تغییری نکرده است. CI از نسخهٔ جدیدتری از Rust (۱.۱۰۰) نسبت به این رایانه (۱.۹۸) استفاده می‌کند و به همین دلیل یک هشدار تازه نشان داد؛ برای بررسی، همان نسخه را روی رایانهٔ خودمان نصب کردیم. همچنین گامی به CI افزودیم که پیش از اجرای آزمون‌ها، سرورهای آزمایشیِ موردنیاز آن‌ها را می‌سازد. فایل `clippy.toml` در open-cosmo اکنون با RPoem یکسان است: نسخهٔ پشتیبانی‌شدهٔ Rust (۱.۸۸) و تنظیمی که استفاده از `unwrap` را درون آزمون‌ها مجاز می‌کند.
 **آنچه مانده است:** فقط بررسی روی Mac و iPhone واقعی (این دستگاه‌ها را اینجا نداریم).
+
+## 2026-11-21 追記: `wire_struct!` の `Option` フィールドの試験 / `wire_struct!` Option-field test
+- **日本語**: `reaxt-actions` に、`Option` フィールドの `null`・欠落・往復と、必須フィールド欠落のエラーの試験を足しました(29件成功、動作変更なし)。未了: Mac・iPhone の実機確認。
+- **English**: Added a `reaxt-actions` test for `Option` fields (`null`, missing key, round trip) and the error for a missing required field (29 pass, no behavior change). Still open: real-device checks on Mac and iPhone.
