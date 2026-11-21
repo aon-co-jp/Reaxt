@@ -506,6 +506,21 @@ mod tests {
     }
 
     #[test]
+    fn tuples_of_eight_nine_and_eleven_round_trip() {
+        let t8: (i64, i64, i64, i64, i64, i64, i64, bool) =
+            decode("[1,2,3,4,5,6,7,true]").unwrap();
+        assert_eq!(t8.to_wire(), "[1,2,3,4,5,6,7,true]");
+        let t9: (i64, i64, i64, i64, i64, i64, i64, i64, String) =
+            decode(r#"[1,2,3,4,5,6,7,8,"i"]"#).unwrap();
+        assert_eq!(t9.8, "i");
+        type T11 = (u8, u8, u8, u8, u8, u8, u8, u8, u8, u8, Option<String>);
+        let t11: T11 = decode("[1,2,3,4,5,6,7,8,9,10,null]").unwrap();
+        assert_eq!(t11.10, None);
+        assert_eq!(t11.to_wire(), "[1,2,3,4,5,6,7,8,9,10,null]");
+        assert!(decode::<T11>("[1,2,3,4,5,6,7,8,9,10]").is_err());
+    }
+
+    #[test]
     fn gql_types_of_basic_and_container_types() {
         use std::collections::{BTreeMap, HashMap};
         assert_eq!(<String as Wire>::gql_type(), GqlType::Str);
