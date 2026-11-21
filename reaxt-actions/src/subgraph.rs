@@ -158,7 +158,7 @@ fn select_operation_text(q: &str, name: &str) -> String {
     let (mut defs, mut depth, mut start, mut i) = (Vec::<String>::new(), 0i32, 0usize, 0usize);
     while i < chars.len() {
         match chars[i] {
-            '#' => while i < chars.len() && chars[i] != '\n' { i += 1 },
+            '#' => { let from = i; while i < chars.len() && chars[i] != '\n' { i += 1 } if chars[start..from].iter().all(|c| c.is_whitespace()) { start = i; } }
             '"' => { i += 1; while i < chars.len() && chars[i] != '"' { if chars[i] == '\\' { i += 1 } i += 1 } }
             '{' => depth += 1,
             '}' => { depth -= 1; if depth == 0 { defs.push(chars[start..=i].iter().collect()); start = i + 1; } }
@@ -890,6 +890,15 @@ mod tests {
         assert!(s.contains("query B") && s.contains("fragment F") && !s.contains("query A"));
         assert_eq!(select_operation_text(q, "Z"), q); // 名前が無ければ元のまま
         assert_eq!(select_operation_text("{ a }", "B"), "{ a }");
+    }
+
+    #[test]
+    fn operation_name_selection_ignores_braces_in_strings_and_comments() {
+        let q = "query A { a(x: \"}\") } # } comment\nmutation B { b }";
+        let s = select_operation_text(q, "B");
+        assert!(s.contains("mutation B") && !s.contains("query A"), "{s}");
+        let s = select_operation_text(q, "A");
+        assert!(s.contains("query A") && !s.contains("mutation B"), "{s}");
     }
 
     #[test]
