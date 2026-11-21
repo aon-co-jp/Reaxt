@@ -673,6 +673,29 @@ mod tests {
         assert!(decode::<Opt>(r#"{"note":"x"}"#).unwrap_err().contains("id"));
     }
 
+    #[test]
+    fn wire_struct_gql_type_lists_fields_in_order() {
+        match <Opt as Wire>::gql_type() {
+            GqlType::Object { name, fields } => {
+                assert_eq!(name, "Opt");
+                assert_eq!(fields.len(), 2);
+                assert_eq!(fields[0], ("id", GqlType::Int));
+                assert_eq!(fields[1], ("note", GqlType::Nullable(Box::new(GqlType::Str))));
+            }
+            other => panic!("expected Object, got {other:?}"),
+        }
+        match <Mixed as Wire>::gql_type() {
+            GqlType::Object { name, fields } => {
+                assert_eq!(name, "Mixed");
+                let names: Vec<_> = fields.iter().map(|f| f.0).collect();
+                assert_eq!(names, ["name", "on", "ids"]);
+                assert_eq!(fields[1].1, GqlType::Boolean);
+                assert_eq!(fields[2].1, GqlType::List(Box::new(GqlType::Int)));
+            }
+            other => panic!("expected Object, got {other:?}"),
+        }
+    }
+
     fn app() -> App {
         let counter = Arc::new(AtomicU32::new(0));
         App::new("t")
