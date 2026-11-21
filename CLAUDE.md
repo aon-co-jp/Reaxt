@@ -974,3 +974,7 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - **日本語**: `wire_struct!` が出す GraphQL の型(構造体名・フィールドの順序・`Option` は null 可・`Vec` は配列・`bool`/整数の型)を固定する試験を足しました(`cargo test -p reaxt-actions` 32件成功)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。
 - **English**: I added a test that pins the GraphQL type produced by `wire_struct!`: the struct name, field order, `Option` as nullable, `Vec` as a list, and the `bool` and integer types. `cargo test -p reaxt-actions`: 32 pass. No behavior changed. Still open: real-device checks on Mac and iPhone (no devices).
 - AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.
+
+## 2026-11-21 追記: 連想配列の出力順と非オブジェクト拒否の試験(自動の小さな保守) / Map ordering and non-object rejection test (small automated maintenance)
+- **日本語**: `reaxt-actions` の `Wire` に、`HashMap` の出力がキー順になること、空の連想配列が `{}` になること、配列・`null`・数値を連想配列として読むとエラーになることの試験を足しました(`cargo test -p reaxt-actions` 33件成功)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。今回は日本語と英語のみ書き、ほかの言語の訳は作っていません(ネイティブ確認前の扱いのまま)。
+- **English**: I added a test to `Wire` in `reaxt-actions` showing that `HashMap` output is key-sorted, an empty map is `{}`, and an array, `null` or a number is rejected when read as a map. `cargo test -p reaxt-actions`: 33 pass. No behavior changed. Still open: real-device checks on Mac and iPhone (no devices). Only Japanese and English were written this time; no other translations were produced (they remain not native-checked).

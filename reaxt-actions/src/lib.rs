@@ -588,6 +588,21 @@ mod tests {
     }
 
     #[test]
+    fn map_output_is_sorted_and_non_objects_are_rejected() {
+        use std::collections::{BTreeMap, HashMap};
+        let mut h: HashMap<String, i64> = HashMap::new();
+        for (k, v) in [("z", 1), ("a", 2), ("m", 3)] {
+            h.insert(k.to_string(), v);
+        }
+        assert_eq!(h.to_wire(), r#"{"a":2,"m":3,"z":1}"#);
+        let b: BTreeMap<String, bool> = BTreeMap::new();
+        assert_eq!(b.to_wire(), "{}");
+        assert!(decode::<BTreeMap<String, i64>>("[1,2]").is_err());
+        assert!(decode::<HashMap<String, i64>>("null").is_err());
+        assert!(decode::<HashMap<String, i64>>("5").is_err());
+    }
+
+    #[test]
     fn f64_round_trips_and_non_finite_is_null() {
         assert_eq!(decode::<f64>("1.5").unwrap(), 1.5);
         assert_eq!(2.25f64.to_wire(), "2.25");
