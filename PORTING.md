@@ -919,3 +919,8 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 ## 2026-11-21 追記: `wire_struct!` の `Option` フィールドの試験 / `wire_struct!` Option-field test
 - **日本語**: `reaxt-actions` に、`Option` フィールドの `null`・欠落・往復と、必須フィールド欠落のエラーの試験を足しました(29件成功、動作変更なし)。未了: Mac・iPhone の実機確認。
 - **English**: Added a `reaxt-actions` test for `Option` fields (`null`, missing key, round trip) and the error for a missing required field (29 pass, no behavior change). Still open: real-device checks on Mac and iPhone.
+
+## 2026-11-21 追記: 中サイズ整数の境界と小数の拒否の試験 / Mid-size integer boundary and fraction-rejection test
+- **日本語**: `reaxt-actions` の `Wire` の試験を足しました(`u16`/`i16`/`i32` の限界、`usize` の負数、整数型への小数の拒否。31件成功)。動作は変えていません。未了: 2^53 超の整数は RS-JSON 側の限界、Mac・iPhone の実機確認。
+- **English**: Added `Wire` tests in `reaxt-actions` (limits of `u16`/`i16`/`i32`, a negative `usize`, decimals rejected for integer types; 31 pass). No behavior changed. Still open: integers above 2^53 (an RS-JSON limit), and real-device checks on Mac and iPhone.
+- AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.
