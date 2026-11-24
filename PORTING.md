@@ -949,3 +949,8 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - **日本語**: `reaxt-actions/src/subgraph.rs` に `split_paths` の分類・順序・不正パス無視の試験を追加(36件成功、動作変更なし)。未了: Mac・iPhone 実機確認。
 - **English**: Added a test in `reaxt-actions/src/subgraph.rs` for `split_paths` classification, ordering and malformed-path handling (38 pass, no behavior change). Still open: real-device checks on Mac and iPhone.
 - AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.
+
+## 2026-11-24 追記: 小数の書式と `Box` の GraphQL 型の試験(自動の小さな保守) / Float-literal and `Box` GraphQL-type test (small automated maintenance)
+- **日本語**: `reaxt-actions` の `Wire` に、`f64`/`f32` が整数・指数表記(`3`・`1e2`・`-4`)を読めること、`null`・真偽値は拒否すること、`Box<T>` の GraphQL 型が中身と同じであることの試験を足しました(`cargo test -p reaxt-actions` 40件成功)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。
+- **English**: I added a test to `Wire` in `reaxt-actions` showing that `f64`/`f32` read integer and exponent literals (`3`, `1e2`, `-4`), reject `null` and booleans, and that the GraphQL type of `Box<T>` is the same as its inner type. `cargo test -p reaxt-actions`: 40 pass. No behavior changed. Still open: real-device checks on Mac and iPhone (no devices).
+- English: AI-translated and AI-reviewed for native fluency; not yet checked by a human native speaker.

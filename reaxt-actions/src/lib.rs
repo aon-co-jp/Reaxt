@@ -832,4 +832,21 @@ mod tests {
         assert!(decode::<()>("false").is_err());
         assert_eq!(decode::<Option<()>>("null"), Ok(None));
     }
+
+    #[test]
+    fn floats_accept_integer_and_exponent_literals_and_box_gql_type_is_transparent() {
+        assert_eq!(decode::<f64>("3").unwrap(), 3.0);
+        assert_eq!(decode::<f64>("1e2").unwrap(), 100.0);
+        assert_eq!(decode::<f32>("-4").unwrap(), -4.0f32);
+        assert!(decode::<f64>("null").is_err());
+        assert!(decode::<f64>("true").is_err());
+        assert_eq!(
+            <Box<Vec<Option<i64>>> as Wire>::gql_type(),
+            <Vec<Option<i64>> as Wire>::gql_type()
+        );
+        assert_eq!(
+            <Option<Box<i64>> as Wire>::gql_type(),
+            GqlType::Nullable(Box::new(GqlType::Int))
+        );
+    }
 }
