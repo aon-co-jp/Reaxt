@@ -959,6 +959,17 @@ mod tests {
     }
 
     #[test]
+    fn field_name_and_read_method_edges() {
+        // 記号は `_` に置き換わり、メソッド名はそのまま続く
+        assert_eq!(field_name("demo.v1.Counter", "Add"), "demo_v1_Counter_Add");
+        assert_eq!(field_name("a-b.c", "GetX"), "a_b_c_GetX");
+        assert_eq!(field_name("", "Get"), "_Get");
+        // 小文字始まり・数字つづき・空は読み取り扱いにしない
+        assert!(!is_read_method("get") && !is_read_method("listAll") && !is_read_method("Read1") && !is_read_method(""));
+        assert!(is_read_method("List") && is_read_method("ReadX"));
+    }
+
+    #[test]
     fn answers_federation_sdl() {
         let (_, out) = execute("{\"query\":\"query { _service { sdl } }\"}", &paths(), &fake);
         assert!(out.contains("_service") && out.contains("scalar JSON"), "{out}");
