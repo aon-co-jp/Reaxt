@@ -959,3 +959,8 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - **日本語**: `reaxt-actions` の `Wire` に、`Vec<(String, i64)>` の往復と、要素が1つ壊れていると配列全体がエラーになる試験を足しました(`cargo test -p reaxt-actions` 41件成功)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。
 - **English**: I added a test to `Wire` in `reaxt-actions` for a `Vec<(String, i64)>` round-trip, and showing that one bad element makes the whole list fail. `cargo test -p reaxt-actions`: 41 pass. No behavior changed. Still open: real-device checks on Mac and iPhone (no devices).
 - English: AI-translated and AI-reviewed for native fluency; not yet checked by a human native speaker.
+
+## 2026-11-24 追記: 連想配列の値にタプル・Option を入れた試験 / Map-of-tuples/Option test
+- **日本語**: `reaxt-actions` の `Wire` の試験を1件追加(`cargo test -p reaxt-actions` 42件成功)。コードの動作は変更なし。未了: Mac・iPhone の実機確認。
+- **English**: Added one `Wire` test in `reaxt-actions` (42 pass). No behavior change. Still open: real-device checks on Mac and iPhone.
+- English: AI-translated and AI-reviewed for native fluency; not yet checked by a human native speaker.

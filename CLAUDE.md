@@ -1011,3 +1011,8 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - **日本語**: `reaxt-actions` の `Wire` に、`Vec<(String, i64)>` の往復と、要素が1つ壊れていると配列全体がエラーになる試験を足しました(`cargo test -p reaxt-actions` 41件成功)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。
 - **English**: I added a test to `Wire` in `reaxt-actions` for a `Vec<(String, i64)>` round-trip, and showing that one bad element makes the whole list fail. `cargo test -p reaxt-actions`: 41 pass. No behavior changed. Still open: real-device checks on Mac and iPhone (no devices).
 - English: AI-translated and AI-reviewed for native fluency; not yet checked by a human native speaker.
+
+## 2026-11-24 追記: 連想配列の値にタプル・Option を入れた試験(自動の小さな保守) / Map-of-tuples/Option test (small automated maintenance)
+- **日本語**: `reaxt-actions` の `Wire` に、`BTreeMap<String, Option<(String, i64)>>` の読み込み(`null` も可)、出力がキー順になること、値のタプルの要素が足りないとエラーになる試験を足しました(`cargo test -p reaxt-actions` 42件成功)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。
+- **English**: I added a test to `Wire` in `reaxt-actions` for reading `BTreeMap<String, Option<(String, i64)>>` (with `null` allowed), key-sorted output, and an error when a tuple value is missing an element. `cargo test -p reaxt-actions`: 42 pass. No behavior changed. Still open: real-device checks on Mac and iPhone (no devices).
+- English: AI-translated and AI-reviewed for native fluency; not yet checked by a human native speaker.

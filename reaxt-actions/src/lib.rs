@@ -858,4 +858,15 @@ mod tests {
         assert!(decode::<Vec<(String, i64)>>("[[\"a\",1],[\"b\"]]").is_err());
         assert!(decode::<Vec<i64>>("[1,\"x\",3]").is_err());
     }
+
+    #[test]
+    fn map_of_tuples_and_options_round_trips_with_sorted_keys() {
+        use std::collections::BTreeMap;
+        let m: BTreeMap<String, Option<(String, i64)>> =
+            decode("{\"z\":[\"a\",1],\"b\":null}").unwrap();
+        assert_eq!(m.get("z"), Some(&Some(("a".to_string(), 1))));
+        assert_eq!(m.get("b"), Some(&None));
+        assert_eq!(m.to_wire(), "{\"b\":null,\"z\":[\"a\",1]}");
+        assert!(decode::<BTreeMap<String, (String, i64)>>("{\"k\":[\"a\"]}").is_err());
+    }
 }
