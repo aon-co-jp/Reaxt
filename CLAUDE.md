@@ -1006,3 +1006,8 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - **日本語**: `reaxt-actions` の `Wire` に、`f64`/`f32` が整数・指数表記(`3`・`1e2`・`-4`)を読めること、`null`・真偽値は拒否すること、`Box<T>` の GraphQL 型が中身と同じであることの試験を足しました(`cargo test -p reaxt-actions` 40件成功)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。
 - **English**: I added a test to `Wire` in `reaxt-actions` showing that `f64`/`f32` read integer and exponent literals (`3`, `1e2`, `-4`), reject `null` and booleans, and that the GraphQL type of `Box<T>` is the same as its inner type. `cargo test -p reaxt-actions`: 40 pass. No behavior changed. Still open: real-device checks on Mac and iPhone (no devices).
 - English: AI-translated and AI-reviewed for native fluency; not yet checked by a human native speaker.
+
+## 2026-11-24 追記: タプルの配列の試験(自動の小さな保守) / Vec-of-tuples test (small automated maintenance)
+- **日本語**: `reaxt-actions` の `Wire` に、`Vec<(String, i64)>` の往復と、要素が1つ壊れていると配列全体がエラーになる試験を足しました(`cargo test -p reaxt-actions` 41件成功)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。
+- **English**: I added a test to `Wire` in `reaxt-actions` for a `Vec<(String, i64)>` round-trip, and showing that one bad element makes the whole list fail. `cargo test -p reaxt-actions`: 41 pass. No behavior changed. Still open: real-device checks on Mac and iPhone (no devices).
+- English: AI-translated and AI-reviewed for native fluency; not yet checked by a human native speaker.

@@ -849,4 +849,13 @@ mod tests {
             GqlType::Nullable(Box::new(GqlType::Int))
         );
     }
+
+    #[test]
+    fn vec_of_tuples_round_trips_and_one_bad_element_fails_the_whole_list() {
+        let v: Vec<(String, i64)> = decode("[[\"a\",1],[\"b\",-2]]").unwrap();
+        assert_eq!(v, vec![("a".to_string(), 1), ("b".to_string(), -2)]);
+        assert_eq!(v.to_wire(), "[[\"a\",1],[\"b\",-2]]");
+        assert!(decode::<Vec<(String, i64)>>("[[\"a\",1],[\"b\"]]").is_err());
+        assert!(decode::<Vec<i64>>("[1,\"x\",3]").is_err());
+    }
 }
