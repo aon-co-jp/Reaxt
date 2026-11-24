@@ -970,6 +970,17 @@ mod tests {
     }
 
     #[test]
+    fn split_paths_classifies_and_ignores_malformed_paths() {
+        let p: Vec<String> = ["/a.v1.S/GetX", "/a.v1.S/Put", "no-slash", "/only", "/a.v1.S/ListY", "/b.v1.T/Remove"].iter().map(|s| s.to_string()).collect();
+        let (reads, writes) = split_paths(&p);
+        // 順序は保たれ、形の合わないパスは黙って捨てられる(`/only` は rsplit_once で分けられない)
+        assert_eq!(reads, vec![("a.v1.S", "GetX"), ("a.v1.S", "ListY")]);
+        assert_eq!(writes, vec![("a.v1.S", "Put"), ("b.v1.T", "Remove")]);
+        let (r, w) = split_paths(&[]);
+        assert!(r.is_empty() && w.is_empty());
+    }
+
+    #[test]
     fn answers_federation_sdl() {
         let (_, out) = execute("{\"query\":\"query { _service { sdl } }\"}", &paths(), &fake);
         assert!(out.contains("_service") && out.contains("scalar JSON"), "{out}");
