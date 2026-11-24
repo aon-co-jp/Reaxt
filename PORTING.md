@@ -964,3 +964,13 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - **日本語**: `reaxt-actions` の `Wire` の試験を1件追加(`cargo test -p reaxt-actions` 42件成功)。コードの動作は変更なし。未了: Mac・iPhone の実機確認。
 - **English**: Added one `Wire` test in `reaxt-actions` (42 pass). No behavior change. Still open: real-device checks on Mac and iPhone.
 - English: AI-translated and AI-reviewed for native fluency; not yet checked by a human native speaker.
+
+## 2026-11-25 現況・未了 / Status and open items
+
+### 日本語
+
+現状: Rust だけで書くフロントとバックエンドの統合枠組み。最近は Wire(型の受け渡し)の試験を広げ(Option<Vec> の null と空配列の区別、タプルや Map の往復、小数の書き方)、コメントの後で操作が失われる operationName の選択の不具合を直した。残り: Mac・iPhone の実機での確認(ここには実機がありません)。翻訳: AI 翻訳(ja/en 以外)、ネイティブの確認はまだです。
+
+### English
+
+Status: a Rust-only front-end and back-end framework. Recently the Wire (typed data exchange) tests were widened (Option<Vec> null versus empty array, round-trips of tuples and maps, float literal forms), and a bug where an operation could be lost after a comment during operationName selection was fixed. Open: checks on a real Mac and iPhone (no such devices here). Translations: AI-translated (other than ja/en), not yet checked by native speakers.
