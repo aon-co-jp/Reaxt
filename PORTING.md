@@ -938,3 +938,10 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - **日本語**: `reaxt-actions/src/subgraph.rs` の `select_operation_text` が、操作の直前のコメントで操作を見失う不具合を修正。移植先でこの関数を使うときは、先頭のコメントを読み飛ばす処理(`'#'` の分岐)も一緒に持っていくこと。未了: Mac・iPhone の実機確認。
 - **English**: Fixed `select_operation_text` in `reaxt-actions/src/subgraph.rs`, which lost an operation that followed a comment. When porting the function, take the leading-comment skip (the `'#'` branch) with it. Still open: real-device checks on Mac and iPhone.
 - AI-translated and AI-reviewed for native fluency; not yet checked by a human native speaker.
+- **English**: When a document held several operations and a comment (`# ...`) came right before one of them, that operation was not recognized, so `operationName` could not select it. I fixed this in `select_operation_text` and added a test showing that a `}` inside a string or a comment does not confuse the selection. `cargo test -p reaxt-actions`: 23 pass. Still open: real-device checks on Mac and iPhone (no devices).
+- English: AI-translated and AI-reviewed for native fluency; not yet checked by a human native speaker.
+
+## 2026-11-24 追記: `field_name` と `is_read_method` の境界の試験(自動の小さな保守) / `field_name` and `is_read_method` edge test (small automated maintenance)
+- **日本語**: サブグラフの `field_name`(記号は `_` に置き換わる)と `is_read_method`(小文字始まり・数字つづき・空は読み取り扱いにしない)の試験を足しました(`cargo test -p reaxt-actions` 37件成功)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。
+- **English**: I added a test for `field_name` (symbols become `_`) and `is_read_method` (a lowercase start, a digit right after the prefix, or an empty name is not treated as a read). `cargo test -p reaxt-actions`: 37 pass. No behavior changed. Still open: real-device checks on Mac and iPhone (no devices).
+- AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.
