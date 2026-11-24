@@ -903,7 +903,7 @@ Status: a Rust-only front-end and back-end framework. Recently the Wire (typed d
 
 ### 한국어
 
-현황: Rust만으로 작성하는 프런트엔드·백엔드 통합 프레임워크입니다. 최근 Wire(타입 데이터 전달) 시험을 넓혀(Option<Vec>의 null과 빈 배열 구분, 튜플과 Map의 왕복, 소수 표기) 시험을 보강했고, 주석 뒤에서 operationName 선택 시 작업이 사라지던 결함을 고쳤습니다. 남은 일: 실제 Mac과 iPhone에서의 확인(여기에는 해당 기기가 없습니다). 번역: AI 번역이며 원어민의 확인은 아직 받지 않았습니다.
+현황: Rust만으로 작성하는 프런트엔드·백엔드 통합 프레임워크입니다. 최근 Wire(타입 데이터 전달) 테스트를 확충했고(Option<Vec>의 null과 빈 배열 구분, 튜플과 Map의 왕복, 소수 표기), 주석 뒤에서 operationName 선택 시 작업이 사라지던 결함을 고쳤습니다. 남은 일: 실제 Mac과 iPhone에서의 확인(여기에는 해당 기기가 없습니다). 번역: AI 번역이며 원어민의 확인은 아직 받지 않았습니다.
 
 ### Deutsch
 
