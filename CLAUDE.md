@@ -993,4 +993,7 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 ## 2026-11-24 追記: `field_name` と `is_read_method` の境界の試験(自動の小さな保守) / `field_name` and `is_read_method` edge test (small automated maintenance)
 - **日本語**: サブグラフの `field_name`(記号は `_` に置き換わる)と `is_read_method`(小文字始まり・数字つづき・空は読み取り扱いにしない)の試験を足しました(`cargo test -p reaxt-actions` 37件成功)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。
 - **English**: I added a test for `field_name` (symbols become `_`) and `is_read_method` (a lowercase start, a digit right after the prefix, or an empty name is not treated as a read). `cargo test -p reaxt-actions`: 37 pass. No behavior changed. Still open: real-device checks on Mac and iPhone (no devices).
+## 2026-11-24 追記: `split_paths` の試験(自動の小さな保守) / `split_paths` test (small automated maintenance)
+- **日本語**: サブグラフの `split_paths` が、読み取り用(`Get`/`List`)と変更用を順序どおりに分け、形の合わないパス(`/` の無いもの、`/only`)を黙って捨てること、空入力で空になることの試験を足しました(`cargo test -p reaxt-actions` 38件成功)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。
+- **English**: I added a test showing that `split_paths` in the subgraph separates read methods (`Get`/`List`) from write methods while keeping order, silently drops malformed paths (one with no `/`, and `/only`), and returns empty lists for empty input. `cargo test -p reaxt-actions`: 38 pass. No behavior changed. Still open: real-device checks on Mac and iPhone (no devices).
 - AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.
