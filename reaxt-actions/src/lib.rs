@@ -670,6 +670,19 @@ mod tests {
     }
 
     #[test]
+    fn option_vec_and_string_list_edge_cases() {
+        // null and [] stay distinct for Option<Vec<_>>.
+        assert_eq!(decode::<Option<Vec<i64>>>("null").unwrap(), None);
+        assert_eq!(decode::<Option<Vec<i64>>>("[]").unwrap(), Some(vec![]));
+        // Strings with quotes, backslashes and newlines survive inside a list.
+        let v = vec!["a\"b".to_string(), "c\\d".to_string(), "e\nf".to_string()];
+        assert_eq!(decode::<Vec<String>>(&v.to_wire()).unwrap(), v);
+        // One null element is not a String.
+        assert!(decode::<Vec<String>>(r#"["x",null]"#).is_err());
+        assert_eq!(decode::<Vec<Option<String>>>(r#"["x",null]"#).unwrap(), vec![Some("x".to_string()), None]);
+    }
+
+    #[test]
     fn wire_struct_round_trips_and_rejects() {
         let m = Mixed { name: "a\"b\n".into(), on: true, ids: vec![1, 2, 3] };
         let json = m.to_wire();
