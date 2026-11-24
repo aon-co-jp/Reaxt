@@ -1030,3 +1030,7 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 ### English
 
 Status: a Rust-only front-end and back-end framework. Recently the Wire (typed data exchange) tests were widened (Option<Vec> null versus empty array, round-trips of tuples and maps, float literal forms), and a bug where an operation could be lost after a comment during operationName selection was fixed. Open: checks on a real Mac and iPhone (no such devices here). Translations: AI-translated (other than ja/en), not yet checked by native speakers.
+
+## 2026-11-24 追記: 操作名選択の境界試験(自動の小さな保守) / operationName selection edge test (small automated maintenance)
+- **日本語**: `select_operation_text` に、`subscription` の選択、操作が1つだけのとき名前が違っても元のままであることの試験を足しました(`cargo test -p reaxt-actions` 44件成功。兄弟が欠けた環境のため、`reaxt-actions` だけ切り出して試験)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。日本語と英語のみ書き、ほかの言語の訳は作っていません(ネイティブ確認前の扱いのまま)。
+- **English**: I added a test to `select_operation_text` for selecting a `subscription`, and for a single-operation document staying unchanged when the name differs (`cargo test -p reaxt-actions`: 44 pass, run on `reaxt-actions` alone because sibling repos were missing). No behavior changed. Still open: real-device checks on Mac and iPhone (no devices). Only Japanese and English were written; no other translations were produced (they remain not native-checked).

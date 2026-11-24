@@ -902,6 +902,16 @@ mod tests {
     }
 
     #[test]
+    fn operation_name_selects_subscription_and_single_operation_is_kept() {
+        let q = "subscription S { s } mutation M { m } query Q { q }";
+        let s = select_operation_text(q, "S");
+        assert!(s.contains("subscription S") && !s.contains("mutation M") && !s.contains("query Q"), "{s}");
+        // 操作が1つだけなら、名前が違っても元のまま
+        let one = "query Only { a }";
+        assert_eq!(select_operation_text(one, "Other"), one);
+    }
+
+    #[test]
     fn executes_with_variables_alias_and_errors() {
         let q = "{\"query\":\"mutation M($a: JSON, $b: JSON) { x: demo_v1_Counter_Add(input: $a) demo_v1_Counter_Fail(input: $b) { y } }\",\"variables\":{\"a\":{\"by\":3},\"b\":null}}";
         let (st, out) = execute(q, &paths(), &fake);
