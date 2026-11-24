@@ -431,6 +431,17 @@ mod tests {
     }
 
     #[test]
+    fn bool_empty_string_and_nested_vec_round_trip() {
+        assert_eq!(decode::<bool>("true").unwrap().to_wire(), "true");
+        assert_eq!(decode::<bool>("false").unwrap().to_wire(), "false");
+        assert_eq!(decode::<String>("\"\"").unwrap().to_wire(), "\"\"");
+        let v: Vec<Vec<i64>> = decode("[[1,2],[],[3]]").unwrap();
+        assert_eq!(v, vec![vec![1, 2], vec![], vec![3]]);
+        assert_eq!(v.to_wire(), "[[1,2],[],[3]]");
+        assert!(decode::<Vec<Vec<i64>>>("[1]").is_err());
+    }
+
+    #[test]
     fn wrong_json_types_are_rejected_and_strings_are_escaped() {
         assert!(decode::<bool>(r#""true""#).is_err());
         assert!(decode::<bool>("1").is_err());
