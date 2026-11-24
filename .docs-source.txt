@@ -1,3 +1,3 @@
 source: aon-co-jp/Reaxt
-commit: 49650e1be3c46bffb6101283f252c611623f2bbd
-updated: 2026-11-24T20:19:35Z
+commit: 725d9dad5d0ed7ca97cffaedef8263606b6d8217
+updated: 2026-11-24T21:45:46Z

@@ -1020,3 +1020,13 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 ## 2026-11-24 追記: `Option<Vec>` と文字列リストの境界の試験(自動の小さな保守) / Option<Vec> and string-list edge test (small automated maintenance)
 - **日本語**: `reaxt-actions` の `Wire` に、`Option<Vec<i64>>` で `null` と `[]` が区別されること、引用符・円記号・改行を含む文字列の配列の往復、`Vec<String>` の要素に `null` があるとエラーになること(`Vec<Option<String>>` なら読めること)の試験を足しました(`reaxt-actions` を切り出して `cargo test` 43件成功)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。日本語と英語のみ書き、ほかの言語の訳は作っていません(ネイティブ確認前の扱いのまま)。
 - **English**: I added a test to `Wire` in `reaxt-actions` showing that `Option<Vec<i64>>` tells `null` from `[]`, that a list of strings with quotes, backslashes and newlines round-trips, and that a `null` element is an error for `Vec<String>` but reads fine for `Vec<Option<String>>`. `cargo test` on `reaxt-actions` alone (sibling repos missing here): 43 pass. No behavior changed. Still open: real-device checks on Mac and iPhone (no devices). Only Japanese and English were written; no other translations were produced (they remain not native-checked).
+
+## 2026-11-25 現況・未了 / Status and open items
+
+### 日本語
+
+現状: Rust だけで書くフロントとバックエンドの統合枠組み。最近は Wire(型の受け渡し)の試験を広げ(Option<Vec> の null と空配列の区別、タプルや Map の往復、小数の書き方)、コメントの後で操作が失われる operationName の選択の不具合を直した。残り: Mac・iPhone の実機での確認(ここには実機がありません)。翻訳: AI 翻訳(ja/en 以外)、ネイティブの確認はまだです。
+
+### English
+
+Status: a Rust-only front-end and back-end framework. Recently the Wire (typed data exchange) tests were widened (Option<Vec> null versus empty array, round-trips of tuples and maps, float literal forms), and a bug where an operation could be lost after a comment during operationName selection was fixed. Open: checks on a real Mac and iPhone (no such devices here). Translations: AI-translated (other than ja/en), not yet checked by native speakers.
