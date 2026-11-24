@@ -822,4 +822,14 @@ mod tests {
         let deep = format!("{}1{}", "[".repeat(100), "]".repeat(100));
         assert_eq!(post(&deep).status, 400, "深さ上限");
     }
+
+    #[test]
+    fn unit_wire_is_null_only() {
+        assert_eq!(().to_wire(), "null");
+        assert_eq!(decode::<()>("null"), Ok(()));
+        assert!(decode::<()>("0").is_err());
+        assert!(decode::<()>("{}").is_err());
+        assert!(decode::<()>("false").is_err());
+        assert_eq!(decode::<Option<()>>("null"), Ok(None));
+    }
 }

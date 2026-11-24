@@ -997,3 +997,7 @@ A execução agendada do `docs-latest` (evento `schedule`) teve sucesso às 21:0
 - **日本語**: サブグラフの `split_paths` が、読み取り用(`Get`/`List`)と変更用を順序どおりに分け、形の合わないパス(`/` の無いもの、`/only`)を黙って捨てること、空入力で空になることの試験を足しました(`cargo test -p reaxt-actions` 38件成功)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。
 - **English**: I added a test showing that `split_paths` in the subgraph separates read methods (`Get`/`List`) from write methods while keeping order, silently drops malformed paths (one with no `/`, and `/only`), and returns empty lists for empty input. `cargo test -p reaxt-actions`: 38 pass. No behavior changed. Still open: real-device checks on Mac and iPhone (no devices).
 - AI-translated and AI-reviewed for native fluency (English); not yet checked by a human native speaker.
+
+## 2026-11-24 追記: `()` の Wire の試験(自動の小さな保守) / `()` Wire test (small automated maintenance)
+- **日本語**: `reaxt-actions` の `Wire for ()` が `null` だけを受け付けること(数値・`{}`・`false` は拒否、`Option<()>` の `null` は `None`)の試験を足しました(`reaxt-actions` を切り出して `cargo test` 38件成功)。コードの動作は変えていません。未了: Mac・iPhone の実機確認(実機なし)。日本語と英語のみ書き、ほかの言語の訳は作っていません(ネイティブ確認前の扱いのまま)。
+- **English**: I added a test that `Wire for ()` accepts only `null` (a number, `{}` and `false` are rejected; `null` for `Option<()>` is `None`). `cargo test` on `reaxt-actions` alone: 38 pass. No behavior changed. Still open: real-device checks on Mac and iPhone (no devices). Only Japanese and English were written; no other translations were produced (they remain not native-checked).
