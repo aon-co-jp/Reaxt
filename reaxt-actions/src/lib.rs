@@ -826,6 +826,21 @@ mod tests {
         assert_eq!(run(&yes, &ADD, 7), Ok(Total { total: 7 }));
     }
 
+
+    #[test]
+    fn option_box_and_duplicate_keys() {
+        // Option<Box<i64>>: null は None、値は Some
+        assert_eq!(decode::<Option<Box<i64>>>("null"), Ok(None));
+        assert_eq!(decode::<Option<Box<i64>>>("5"), Ok(Some(Box::new(5))));
+        assert_eq!(Some(Box::new(5i64)).to_wire(), "5");
+        assert_eq!(None::<Box<i64>>.to_wire(), "null");
+        // Vec<Option<Box<String>>> の往復
+        let v: Vec<Option<Box<String>>> = vec![Some(Box::new("a".into())), None];
+        assert_eq!(v.to_wire(), "[\"a\",null]");
+        assert_eq!(decode::<Vec<Option<Box<String>>>>("[\"a\",null]"), Ok(v));
+        // 重複キーは連想配列でも拒否される(RS-JSONの上限つき読み込み)
+        assert!(decode::<std::collections::BTreeMap<String, i64>>("{\"a\":1,\"a\":2}").is_err());
+    }
     #[test]
     fn malformed_and_oversized_inputs_are_rejected_by_rs_json() {
         let app = app();
