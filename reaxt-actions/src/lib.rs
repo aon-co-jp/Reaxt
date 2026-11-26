@@ -897,4 +897,14 @@ mod tests {
         assert_eq!(m.to_wire(), "{\"b\":null,\"z\":[\"a\",1]}");
         assert!(decode::<BTreeMap<String, (String, i64)>>("{\"k\":[\"a\"]}").is_err());
     }
+
+    #[test]
+    fn map_keys_may_be_empty_or_unicode_and_stay_sorted() {
+        use std::collections::BTreeMap;
+        let m: BTreeMap<String, i64> = decode("{\"\":1,\"あ\":2,\"a\":3}").unwrap();
+        assert_eq!(m.len(), 3);
+        assert_eq!(m.get(""), Some(&1));
+        assert_eq!(m.get("あ"), Some(&2));
+        assert_eq!(m.to_wire(), "{\"\":1,\"a\":3,\"あ\":2}");
+    }
 }
