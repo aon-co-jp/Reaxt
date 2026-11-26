@@ -69,7 +69,7 @@ fn main() {
             if !OK.contains(&i.method.as_str()) {
                 return Err(Denied::new(403, "許可されていないメソッド"));
             }
-            http_post(&up3, &format!("/open_runo.aruaru.admin.v1.Admin/{}", i.method), &i.body).map(|body| GqlOut { body }).map_err(|e| Denied::new(502, e))
+            http_post(&up3, &format!("/open_runo.aruaru.admin.Admin/{}", i.method), &i.body).map(|body| GqlOut { body }).map_err(|e| Denied::new(502, e))
         }).action(&GQL, move |_, i: aruaru_admin_reaxt::GqlIn| {
             // 読み取り専用の中継: mutation は通さない(管理操作は別途Connectで)
             if i.query.trim_start().starts_with("mutation") {
