@@ -713,6 +713,17 @@ mod tests {
     }
 
     #[test]
+    fn wire_struct_mixed_empty_list_and_field_order_independent() {
+        let a: Mixed = decode(r#"{"name":"x","on":true,"ids":[]}"#).unwrap();
+        let b: Mixed = decode(r#"{"ids":[],"on":true,"name":"x"}"#).unwrap();
+        assert_eq!(a, b);
+        assert!(a.ids.is_empty());
+        assert_eq!(decode::<Mixed>(&a.to_wire()).unwrap(), a);
+        // A value over u8 in the list is rejected.
+        assert!(decode::<Mixed>(r#"{"name":"x","on":false,"ids":[256]}"#).is_err());
+    }
+
+    #[test]
     fn wire_struct_gql_type_lists_fields_in_order() {
         match <Opt as Wire>::gql_type() {
             GqlType::Object { name, fields } => {
