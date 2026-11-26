@@ -907,4 +907,14 @@ mod tests {
         assert_eq!(m.get("あ"), Some(&2));
         assert_eq!(m.to_wire(), "{\"\":1,\"a\":3,\"あ\":2}");
     }
+
+    #[test]
+    fn whitespace_is_tolerated_and_option_bool_round_trips() {
+        let v: Vec<i64> = decode("  [ 1 , 2 ,\n 3 ]  ").unwrap();
+        assert_eq!(v, vec![1, 2, 3]);
+        assert_eq!(decode::<Option<bool>>(" null ").unwrap(), None);
+        assert_eq!(decode::<Option<bool>>("true").unwrap(), Some(true));
+        assert_eq!(Some(false).to_wire(), "false");
+        assert_eq!(None::<bool>.to_wire(), "null");
+    }
 }

@@ -1059,3 +1059,7 @@ Status: a Rust-only front-end and back-end framework. Recently the Wire (typed d
 ## 2026-11-26 追記: 連想配列のキー(空・日本語)の試験(自動の小さな保守) / Map-key edge test (small automated maintenance)
 - **日本語**: `reaxt-actions` の `Wire` に、連想配列のキーが空文字列・日本語でも読め、出力はキー順になる試験を足しました(動作変更なし。兄弟リポジトリが欠けた環境のため `reaxt-actions` だけ切り出して `cargo test` 46件成功)。未了: Mac・iPhone の実機確認。日本語と英語のみ書き、ほかの言語の訳は作っていません(ネイティブ確認前の扱いのまま)。
 - **English**: I added a test to `Wire` in `reaxt-actions`: map keys that are empty or Japanese are read, and output is key-sorted. No behavior changed. Run on `reaxt-actions` alone because sibling repos were missing here: 46 pass. Still open: real-device checks on Mac and iPhone. Only Japanese and English were written; no other translations (still not native-checked).
+
+## 2026-11-26 追記: 空白許容と Option<bool> の試験(自動の小さな保守) / Whitespace and Option<bool> test (small automated maintenance)
+- **日本語**: `reaxt-actions` の `Wire` に、JSON の前後・要素間の空白や改行を許容して読めること、`Option<bool>` の `null`/`true`/`false` の往復の試験を足しました(動作変更なし。`cargo test -p reaxt-actions` 47件成功)。未了: Mac・iPhone の実機確認(実機なし)。日本語と英語のみ書き、ほかの言語の訳は作っていません(ネイティブ確認前の扱いのまま)。
+- **English**: I added a test to `Wire` in `reaxt-actions` showing that JSON with surrounding and inner whitespace or newlines is read, and that `Option<bool>` round-trips `null`, `true` and `false`. No behavior changed. `cargo test -p reaxt-actions`: 47 pass. Still open: real-device checks on Mac and iPhone (no devices). Only Japanese and English were written; no other translations were produced (they remain not native-checked).
