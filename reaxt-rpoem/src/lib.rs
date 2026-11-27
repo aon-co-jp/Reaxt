@@ -53,6 +53,10 @@ pub fn route(app: Arc<App>) -> Route {
     for p in app.stream_paths().into_iter().chain(app.async_stream_paths()) {
         r = r.at(&p, get(host_handler(app.clone())));
     }
+    // WebSocket(GET + Upgrade)。接続は RPoem が持ち、イベントごとに App::ws_handle を呼ぶ。
+    for rp in app.ws_patterns().iter().flat_map(|p| expand(p)) {
+        r = r.at(&rp, get(ws_handler(app.clone())));
+    }
     r
 }
 
@@ -126,6 +130,50 @@ fn async_body(s: reaxt::stream::AsyncStream) -> open_runo_poem_compat::hyper_com
         let _ = tx.send(s.tail).await;
     });
     ChannelBody(rx).boxed()
+}
+
+/// WebSocket のアップグレードを受け、`App::ws_handle` が返す指示を実行する。
+/// 順序: Open → (受信した Text ごとに) → 接続が切れたら Close。`WsOut::Close` が出たらこちらから閉じる。
+fn ws_handler(app: Arc<App>) -> open_runo_poem_compat::Handler {
+    handler_fn(move |req, _params| {
+        let app = app.clone();
+        async move {
+            let path = req.uri().path_and_query().map(|p| p.as_str().to_string()).unwrap_or_else(|| "/".to_string());
+            hyper_compat::websocket_upgrade(req, move |mut conn| {
+                Box::pin(async move {
+                    use reaxt::app::{WsEvent, WsOut};
+                    // 戻り値: true なら続ける
+                    async fn run(conn: &mut hyper_compat::WebSocketConnection, outs: Option<Vec<WsOut>>) -> bool {
+                        for o in outs.unwrap_or_default() {
+                            match o {
+                                WsOut::Send(t) => {
+                                    if conn.send_text(t).await.is_err() {
+                                        return false;
+                                    }
+                                }
+                                WsOut::Close => {
+                                    let _ = conn.close().await;
+                                    return false;
+                                }
+                            }
+                        }
+                        true
+                    }
+                    if !run(&mut conn, app.ws_handle(&path, &WsEvent::Open)).await {
+                        return;
+                    }
+                    while let Some(m) = conn.recv().await {
+                        if let hyper_compat::WsMessage::Text(t) = m {
+                            if !run(&mut conn, app.ws_handle(&path, &WsEvent::Text(t))).await {
+                                return;
+                            }
+                        }
+                    }
+                    let _ = app.ws_handle(&path, &WsEvent::Close);
+                })
+            })
+        }
+    })
 }
 
 fn host_handler(app: Arc<App>) -> open_runo_poem_compat::Handler {
@@ -386,5 +434,68 @@ mod tests {
         let d = srv.request(Method::GET, "/docs/a/b/c", &[], None).await;
         assert!(d.text().contains("<i>a/b/c</i>"));
         assert_eq!(srv.request(Method::GET, "/nope", &[], None).await.status, 404);
+    }
+}
+
+#[cfg(test)]
+mod ws_tests {
+    use super::*;
+    use reaxt::app::{Params, WsEvent, WsOut};
+    use tokio::io::{AsyncReadExt, AsyncWriteExt};
+
+    /// クライアント→サーバーの(マスク付き)テキストフレーム。
+    fn frame(text: &str) -> Vec<u8> {
+        let k = [1u8, 2, 3, 4];
+        let mut f = vec![0x81, 0x80 | text.len() as u8];
+        f.extend_from_slice(&k);
+        f.extend(text.bytes().enumerate().map(|(i, b)| b ^ k[i % 4]));
+        f
+    }
+
+    async fn read_text(s: &mut tokio::net::TcpStream) -> String {
+        let mut h = [0u8; 2];
+        s.read_exact(&mut h).await.unwrap();
+        assert_eq!(h[0], 0x81, "text frame");
+        let mut b = vec![0u8; (h[1] & 0x7f) as usize];
+        s.read_exact(&mut b).await.unwrap();
+        String::from_utf8(b).unwrap()
+    }
+
+    #[tokio::test]
+    async fn websocket_route_over_real_socket() {
+        let app = Arc::new(
+            App::new("ws")
+                .ws(
+                    "chat/[room].rs",
+                    Arc::new(|p: &Params, ev: &WsEvent| {
+                        let room = p[0].1.clone();
+                        match ev {
+                            WsEvent::Open => vec![WsOut::Send(format!("joined {room}"))],
+                            WsEvent::Text(t) if t == "bye" => vec![WsOut::Send("bye".into()), WsOut::Close],
+                            WsEvent::Text(t) => vec![WsOut::Send(format!("{room}: {t}"))],
+                            WsEvent::Close => vec![],
+                        }
+                    }),
+                )
+                .finish(),
+        );
+        let (addr, _h) = open_runo_poem_compat::Server::new(open_runo_poem_compat::TcpListener::bind(([127, 0, 0, 1], 0)))
+            .run(route(app))
+            .await
+            .unwrap();
+        let mut s = tokio::net::TcpStream::connect(addr).await.unwrap();
+        s.write_all(b"GET /chat/lobby HTTP/1.1\r\nhost: x\r\nupgrade: websocket\r\nconnection: Upgrade\r\nsec-websocket-key: dGhlIHNhbXBsZSBub25jZQ==\r\nsec-websocket-version: 13\r\n\r\n").await.unwrap();
+        let mut head = Vec::new();
+        while !head.ends_with(b"\r\n\r\n") {
+            head.push(s.read_u8().await.unwrap());
+        }
+        let head = String::from_utf8(head).unwrap();
+        assert!(head.starts_with("HTTP/1.1 101"), "{head}");
+        assert!(head.to_lowercase().contains("sec-websocket-accept: s3pplmbitxaq9kygzzhzrbk+xoo="), "{head}");
+        assert_eq!(read_text(&mut s).await, "joined lobby");
+        s.write_all(&frame("hi")).await.unwrap();
+        assert_eq!(read_text(&mut s).await, "lobby: hi");
+        s.write_all(&frame("bye")).await.unwrap();
+        assert_eq!(read_text(&mut s).await, "bye");
     }
 }

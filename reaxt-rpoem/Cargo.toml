@@ -17,4 +17,4 @@ tokio = { version = "1", features = ["rt", "sync", "time", "macros"] }
 bytes_like = { package = "bytes", version = "1" }
 
 [dev-dependencies]
-tokio = { version = "1", features = ["macros", "rt-multi-thread", "time"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "time", "net", "io-util"] }
