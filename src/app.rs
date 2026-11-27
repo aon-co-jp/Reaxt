@@ -66,6 +66,8 @@ pub struct App {
     /// ストリーミングSSRのページ(`GET path`)。チャンク列(`stream::chunks`の結果)を返す関数。
     streams: Vec<(String, StreamPage)>,
     async_streams: Vec<(String, AsyncStreamPage)>,
+    /// WebSocketのルート(`pages/`規約のパス)。実際の接続はホストが持ち、メッセージごとに `ws_handle` を呼ぶ。
+    sockets: Vec<(Route, WsHandler)>,
 }
 
 /// 外部連携の入口: (リクエスト, Connectメソッド呼び出し関数) → 応答。
@@ -73,6 +75,26 @@ pub struct App {
 pub type StreamPage = std::sync::Arc<dyn Fn() -> Vec<String> + Send + Sync>;
 /// 非同期ストリーミングページ: (シェル, 遅れて解決する各境界)を返す関数。`slot(i, fallback)` をシェルに置き、`pendings[i]` と対応させる。
 pub type AsyncStreamPage = std::sync::Arc<dyn Fn() -> (VNode, Vec<crate::stream::AsyncPending>) + Send + Sync>;
+
+/// WebSocketのイベント(ホストが接続の開閉とメッセージごとに渡す)。
+#[derive(Debug, Clone, PartialEq)]
+pub enum WsEvent {
+    Open,
+    Text(String),
+    Close,
+}
+
+/// ハンドラが返す指示(ホストが順に実行する)。
+#[derive(Debug, Clone, PartialEq)]
+pub enum WsOut {
+    /// この接続へ文字列を送る。
+    Send(String),
+    /// この接続を閉じる。
+    Close,
+}
+
+/// WebSocketのハンドラ: (パスのパラメータ, イベント) → 指示の列。通信を持たない純関数なので、どのホスト(axum・tokio-tungstenite・Wasm)でも同じに動く。
+pub type WsHandler = std::sync::Arc<dyn Fn(&Params, &WsEvent) -> Vec<WsOut> + Send + Sync>;
 
 pub type Gateway = std::sync::Arc<dyn Fn(&Request, &dyn Fn(&str, &str) -> (u16, String)) -> Response + Send + Sync>;
 
@@ -214,6 +236,24 @@ impl App {
         parts.extend(it);
         parts.push("</body></html>".to_string());
         Response { status: 200, content_type: "text/html; charset=utf-8", headers: vec![("cache-control".into(), "no-store".into())], bytes: None, body: parts.concat(), chunks: Some(parts), streaming: None }
+    }
+
+    /// WebSocketのルートを登録する(パスは`pages/`規約: `chat/[room].rs`)。
+    pub fn ws(mut self, file: &str, f: WsHandler) -> Self {
+        let r = crate::route_from_path(file, RenderMode::Ssr).unwrap_or_else(|| panic!("ページ規約に合わないパス: {file}"));
+        self.sockets.push((r, f));
+        self
+    }
+
+    /// WebSocketのパターン一覧(ホスト側のルート登録用)。
+    pub fn ws_patterns(&self) -> Vec<String> {
+        self.sockets.iter().map(|(r, _)| r.pattern.clone()).collect()
+    }
+
+    /// WebSocketのイベントを処理する。パスに合うルートが無ければ `None`(ホストは404/拒否にする)。
+    pub fn ws_handle(&self, path: &str, ev: &WsEvent) -> Option<Vec<WsOut>> {
+        let bare = path.split(['?', '#']).next().unwrap_or("");
+        self.sockets.iter().find_map(|(r, h)| matches(r, bare).map(|p| h(&p, ev)))
     }
 
     /// 外部連携の入口(`POST`)のパス一覧(ホスト側のルート登録用)。
@@ -396,5 +436,26 @@ mod tests {
         assert_eq!(post("/demo.v1.Hello/Say", "").status, 400);
         assert_eq!(post("/about", "x").status, 405);
         assert_eq!(app.method_paths(), vec!["/demo.v1.Hello/Say"]);
+    }
+
+    #[test]
+    fn websocket_route_dispatches_events() {
+        let app = App::new("t").ws(
+            "chat/[room].rs",
+            std::sync::Arc::new(|p: &Params, ev: &WsEvent| {
+                let room = p.iter().find(|(k, _)| k == "room").map(|(_, v)| v.clone()).unwrap_or_default();
+                match ev {
+                    WsEvent::Open => vec![WsOut::Send(format!("joined {room}"))],
+                    WsEvent::Text(t) if t == "bye" => vec![WsOut::Send("bye".into()), WsOut::Close],
+                    WsEvent::Text(t) => vec![WsOut::Send(format!("{room}: {t}"))],
+                    WsEvent::Close => vec![],
+                }
+            }),
+        );
+        assert_eq!(app.ws_patterns().len(), 1);
+        assert_eq!(app.ws_handle("/chat/lobby", &WsEvent::Open), Some(vec![WsOut::Send("joined lobby".into())]));
+        assert_eq!(app.ws_handle("/chat/lobby?x=1", &WsEvent::Text("hi".into())), Some(vec![WsOut::Send("lobby: hi".into())]));
+        assert_eq!(app.ws_handle("/chat/a", &WsEvent::Text("bye".into())), Some(vec![WsOut::Send("bye".into()), WsOut::Close]));
+        assert_eq!(app.ws_handle("/nope", &WsEvent::Open), None);
     }
 }
